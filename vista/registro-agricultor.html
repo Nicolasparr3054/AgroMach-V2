@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Agricultor - AgroMatch</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assent/css/registro-agricultor.css">
+</head>
+<body>
+    <div class="container">
+        <!-- SECCIÓN IZQUIERDA - INFORMACIÓN Y BENEFICIOS -->
+        <div class="left-section">
+            <div class="brand">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>AgroMatch</span>
+                </div>
+                
+                <h1>¡Únete a nosotros y publica ofertas gratis!</h1>
+                <p>Ahorra costos y tiempo en tus procesos de selección y consigue el candidato ideal de una forma rápida y fácil</p>
+                
+                <div class="benefits">
+                    <div class="benefit-item">
+                        <i class="fas fa-users"></i>
+                        <span>Acceso a miles de trabajadores especializados</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Contratación rápida y eficiente</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Perfiles verificados y confiables</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Búsqueda por geolocalización</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DERECHA - FORMULARIO DE REGISTRO -->
+        <div class="right-section">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Regístrate para publicar tus vacantes</h2>
+                    <p>Únete a la mayor red de empleo agrícola de Colombia</p>
+                </div>
+
+                <!-- FORMULARIO QUE USA EL MISMO registro.php -->
+                <form class="register-form" id="registerForm" action="../conexion/registro.php" method="POST">
+                    
+                    <!-- Campo oculto para el rol -->
+                    <input type="hidden" name="rol" value="Agricultor">
+                    
+                    <!-- Primera fila: Nombre y Apellido separados -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="nombre"
+                                name="nombre"
+                                placeholder="Nombre" 
+                                pattern="[A-Za-zÀ-ÿ\s]+" 
+                                title="Solo se permiten letras y espacios"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="apellido"
+                                name="apellido"
+                                placeholder="Apellido" 
+                                pattern="[A-Za-zÀ-ÿ\s]+" 
+                                title="Solo se permiten letras y espacios"
+                                required>
+                        </div>
+                    </div>
+
+                    <!-- Segunda fila: Correo y Teléfono -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input 
+                                type="email" 
+                                id="correo"
+                                name="correo"
+                                placeholder="Correo electrónico"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="telefono"
+                                name="telefono"
+                                placeholder="Teléfono (opcional)">
+                        </div>
+                    </div>
+
+                    <!-- Tercera fila: Contraseña y Confirmar contraseña -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="password-container">
+                                <input 
+                                    type="password" 
+                                    id="password"
+                                    name="password"
+                                    placeholder="Contraseña" 
+                                    minlength="8"
+                                    required>
+                                <i class="fas fa-eye toggle-password" onclick="togglePassword('password')"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="password-container">
+                                <input 
+                                    type="password" 
+                                    id="confirm_password"
+                                    name="confirm_password" 
+                                    placeholder="Confirmar contraseña" 
+                                    minlength="8"
+                                    required>
+                                <i class="fas fa-eye toggle-password" onclick="togglePassword('confirm_password')"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Términos y condiciones -->
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="terminos" name="terminos" required>
+                        <label for="terminos">
+                            Al hacer clic en crear cuenta, aceptas las 
+                            <a href="#">Condiciones Legales</a>, 
+                            <a href="#">Reglamento de prestación de servicios</a> y la 
+                            <a href="#">Política de Privacidad</a> de AgroMatch
+                        </label>
+                    </div>
+
+                    <!-- Botón de registro -->
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-user-plus"></i>
+                        Crear cuenta
+                    </button>
+                </form>
+
+                <!-- Enlace para login -->
+                <div class="login-link">
+                    <p>¿Ya tienes cuenta? <a href="login-agricultor.html">Inicia sesión</a></p>
+                </div>
+
+                <!-- Área para mostrar mensajes -->
+                <div id="message-area" style="margin-top: 15px; text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de notificación -->
+    <div id="notification-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i id="modal-icon" class="fas fa-check-circle"></i>
+                <h3 id="modal-title">Título</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Mensaje</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-close" class="btn-modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estilos adicionales -->
+    <style>
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .password-container input {
+            padding-right: 40px;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Estilos del modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 90%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            padding: 30px 30px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-header i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 20px 30px;
+            text-align: center;
+        }
+
+        .modal-body p {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .modal-footer {
+            padding: 20px 30px 30px;
+            text-align: center;
+        }
+
+        .btn-modal {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .modal-success {
+            color: #4CAF50;
+        }
+
+        .modal-error {
+            color: #f44336;
+        }
+
+        .modal-info {
+            color: #2196F3;
+        }
+
+        .btn-modal.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .btn-modal.error:hover {
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+    </style>
+
+    <!-- JavaScript para validaciones -->
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Función mejorada para mostrar notificaciones modales
+        function showNotification(message, type, title = '') {
+            const modal = document.getElementById('notification-modal');
+            const icon = document.getElementById('modal-icon');
+            const titleEl = document.getElementById('modal-title');
+            const messageEl = document.getElementById('modal-message');
+            const closeBtn = document.getElementById('modal-close');
+            
+            // Configurar contenido según el tipo
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle modal-success';
+                titleEl.textContent = title || '¡Registro Exitoso!';
+                closeBtn.className = 'btn-modal';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle modal-error';
+                titleEl.textContent = title || 'Error en el Registro';
+                closeBtn.className = 'btn-modal error';
+            } else {
+                icon.className = 'fas fa-info-circle modal-info';
+                titleEl.textContent = title || 'Información';
+                closeBtn.className = 'btn-modal';
+            }
+            
+            messageEl.innerHTML = message;
+            modal.style.display = 'flex';
+            
+            // Cerrar modal
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+            
+            // Cerrar con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Cerrar clickeando fuera del modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Validación del formulario
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const terminos = document.getElementById('terminos').checked;
+            
+            // Validar campos obligatorios
+            if (!nombre || !apellido || !correo || !password || !confirmPassword) {
+                showNotification('Por favor, completa todos los campos obligatorios.', 'error', 'Campos Incompletos');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Validar nombre y apellido (solo letras)
+            const nameRegex = /^[A-Za-zÀ-ÿ\s]+$/;
+            if (!nameRegex.test(nombre)) {
+                showNotification('El nombre solo puede contener letras y espacios.', 'error', 'Nombre Inválido');
+                e.preventDefault();
+                return false;
+            }
+            
+            if (!nameRegex.test(apellido)) {
+                showNotification('El apellido solo puede contener letras y espacios.', 'error', 'Apellido Inválido');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Verificar que las contraseñas coincidan
+            if (password !== confirmPassword) {
+                showNotification('Las contraseñas ingresadas no coinciden. Por favor, verifícalas.', 'error', 'Contraseñas No Coinciden');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Verificar longitud mínima de contraseña
+            if (password.length < 8) {
+                showNotification('La contraseña debe tener al menos 8 caracteres para mayor seguridad.', 'error', 'Contraseña Muy Corta');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Verificar términos
+            if (!terminos) {
+                showNotification('Debes aceptar los términos y condiciones para continuar.', 'error', 'Términos Requeridos');
+                e.preventDefault();
+                return false;
+            }
+            
+            // Mostrar mensaje de procesamiento
+            showNotification('Tu registro está siendo procesado. Por favor espera un momento...', 'info', 'Procesando');
+            return true;
+        });
+
+        // Manejar mensajes de PHP
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            const type = urlParams.get('type');
+            
+            if (message) {
+                const decodedMessage = decodeURIComponent(message);
+                
+                if (type === 'success') {
+                    showNotification(decodedMessage, 'success');
+                } else if (type === 'error') {
+                    showNotification(decodedMessage, 'error');
+                } else {
+                    showNotification(decodedMessage, 'info');
+                }
+                
+                // Limpiar la URL
+                const cleanURL = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanURL);
+            }
+        });
+
+        // Validación en tiempo real
+        document.getElementById('nombre').addEventListener('input', function() {
+            const nameRegex = /^[A-Za-zÀ-ÿ\s]*$/;
+            if (!nameRegex.test(this.value)) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+
+        document.getElementById('apellido').addEventListener('input', function() {
+            const nameRegex = /^[A-Za-zÀ-ÿ\s]*$/;
+            if (!nameRegex.test(this.value)) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+
+        document.getElementById('confirm_password').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                this.style.borderColor = '#e74c3c';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+    </script>
+</body>
+</html>

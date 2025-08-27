@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroMatch - Dashboard Trabajador</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a2e 0%, #2d5a27 50%, #4a7c59 100%);
+            min-height: 100vh;
+            color: #1e3a2e;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Header */
+        .header {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(30, 58, 46, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e3a2e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(74, 124, 89, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 124, 89, 0.4);
+            background: linear-gradient(135deg, #66b266, #4a9c4a);
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 22px;
+            color: #64748b;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .notification-icon:hover {
+            background: rgba(144, 238, 144, 0.1);
+            color: #4a7c59;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #ffffff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .profile-menu {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 124, 89, 0.3);
+        }
+
+        .profile-menu:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 124, 89, 0.4);
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .main-panel, .side-panel {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(30, 58, 46, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e3a2e;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(144, 238, 144, 0.05);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #4a7c59;
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4a7c59;
+            font-size: 18px;
+        }
+
+        /* Filter Buttons */
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(144, 238, 144, 0.1);
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #1e3a2e;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #4a7c59;
+            color: #ffffff;
+            border-color: #4a7c59;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(74, 124, 89, 0.3);
+        }
+
+        /* Job Cards */
+        .job-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .job-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .job-list::-webkit-scrollbar-track {
+            background: rgba(144, 238, 144, 0.1);
+            border-radius: 10px;
+        }
+
+        .job-list::-webkit-scrollbar-thumb {
+            background: #4a7c59;
+            border-radius: 10px;
+        }
+
+        .job-card {
+            border: 2px solid rgba(144, 238, 144, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(144, 238, 144, 0.05);
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            border-color: #4a7c59;
+            box-shadow: 0 10px 30px rgba(74, 124, 89, 0.15);
+            transform: translateY(-3px);
+            background: #ffffff;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .job-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3a2e;
+        }
+
+        .job-salary {
+            color: #4a7c59;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .job-details {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .job-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .job-tag {
+            background: rgba(144, 238, 144, 0.3);
+            color: #1e3a2e;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .apply-btn {
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 124, 89, 0.4);
+            background: linear-gradient(135deg, #66b266, #4a9c4a);
+        }
+
+        .apply-btn:disabled {
+            background: #90EE90;
+            cursor: not-allowed;
+            transform: none;
+            color: #1e3a2e;
+        }
+
+        /* My Jobs Section */
+        .my-jobs {
+            margin-top: 30px;
+        }
+
+        .current-job {
+            border-left: 5px solid #4a7c59;
+            background: rgba(144, 238, 144, 0.1);
+        }
+
+        .job-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-confirmed {
+            background: rgba(144, 238, 144, 0.3);
+            color: #1e3a2e;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #8B4513;
+        }
+
+        .status-progress {
+            background: rgba(74, 124, 89, 0.2);
+            color: #1e3a2e;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: rgba(144, 238, 144, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 2px solid rgba(74, 124, 89, 0.1);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 32px;
+            box-shadow: 0 8px 20px rgba(74, 124, 89, 0.3);
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3a2e;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #4a7c59;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Map Container */
+        .map-container {
+            background: rgba(144, 238, 144, 0.1);
+            border-radius: 15px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e3a2e;
+            margin-bottom: 25px;
+            border: 2px dashed #4a7c59;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .map-container:hover {
+            background: rgba(144, 238, 144, 0.2);
+            transform: scale(1.02);
+        }
+
+        .map-content {
+            text-align: center;
+        }
+
+        .map-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #4a7c59;
+        }
+
+        /* Notifications */
+        .notifications {
+            margin-top: 25px;
+        }
+
+        .notification-item {
+            background: rgba(144, 238, 144, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid #4a7c59;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.2);
+            background: #ffffff;
+        }
+
+        .notification-title {
+            font-weight: 700;
+            color: #1e3a2e;
+            margin-bottom: 5px;
+        }
+
+        .notification-text {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .quick-stat {
+            background: rgba(144, 238, 144, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(74, 124, 89, 0.2);
+        }
+
+        .quick-stat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.15);
+            background: rgba(144, 238, 144, 0.2);
+        }
+
+        .quick-stat-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4a7c59;
+        }
+
+        .quick-stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .main-panel, .side-panel {
+                padding: 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .job-footer {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .job-tags {
+                justify-content: flex-start;
+            }
+
+            .apply-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .map-container {
+                height: 180px;
+            }
+
+            .map-icon {
+                font-size: 40px;
+            }
+
+            .filter-container {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px;
+            }
+
+            .main-panel, .side-panel {
+                padding: 15px;
+            }
+
+            .job-card {
+                padding: 20px;
+            }
+
+            .job-title {
+                font-size: 18px;
+            }
+
+            .job-salary {
+                font-size: 16px;
+            }
+
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .profile-name {
+                font-size: 18px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Animation */
+        .success-check {
+            color: #90EE90;
+            font-weight: bold;
+        }
+
+        /* CSS adicional para animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .job-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .notification-item {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                🌱 AgroMatch
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="searchJobs()">
+                    <i class="fas fa-search"></i> Buscar Trabajos
+                </button>
+                <div class="notification-icon" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+                <div class="profile-menu" onclick="showProfileMenu()">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard">
+            <div class="main-panel">
+                <!-- Search and Filters -->
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="Buscar trabajos por ubicación, tipo de cultivo, etc..." oninput="filterJobs(this.value)">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <div class="filter-container">
+                    <button class="filter-btn active" onclick="filterByType(this, 'todos')">Todos</button>
+                    <button class="filter-btn" onclick="filterByType(this, 'cosecha')">Cosecha</button>
+                    <button class="filter-btn" onclick="filterByType(this, 'siembra')">Siembra</button>
+                    <button class="filter-btn" onclick="filterByType(this, 'mantenimiento')">Mantenimiento</button>
+                    <button class="filter-btn" onclick="filterByType(this, 'recoleccion')">Recolección</button>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-number">8</div>
+                        <div class="quick-stat-label">Trabajos Cerca</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-number">3</div>
+                        <div class="quick-stat-label">Postulaciones</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-number">1</div>
+                        <div class="quick-stat-label">En Progreso</div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <i class="fas fa-briefcase"></i>
+                    Trabajos Disponibles Cerca de Ti
+                </div>
+                
+                <div class="job-list">
+                    <div class="job-card" data-type="cosecha">
+                        <div class="job-header">
+                            <div class="job-title">Cosecha de Café Premium</div>
+                            <div class="job-salary">$50,000/día</div>
+                        </div>
+                        <div class="job-details">
+                            Finca El Paraíso - Recolección selectiva de café maduro en montaña. Experiencia en café requerida.
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            2.5 km • 3 días de duración • Inicia mañana
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Café</span>
+                                <span class="job-tag">Montaña</span>
+                                <span class="job-tag">Urgente</span>
+                            </div>
+                            <button class="apply-btn" onclick="applyToJob(this)">
+                                <i class="fas fa-paper-plane"></i> Postularme
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="job-card" data-type="siembra">
+                        <div class="job-header">
+                            <div class="job-title">Siembra de Maíz Tecnificado</div>
+                            <div class="job-salary">$45,000/día</div>
+                        </div>
+                        <div class="job-details">
+                            Lote Norte - Preparación de tierra, siembra tecnificada y aplicación de fertilizantes.
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            4.1 km • 5 días de duración • Inicia en 2 días
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Maíz</span>
+                                <span class="job-tag">Tecnificado</span>
+                            </div>
+                            <button class="apply-btn" onclick="applyToJob(this)">
+                                <i class="fas fa-paper-plane"></i> Postularme
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="job-card" data-type="recoleccion">
+                        <div class="job-header">
+                            <div class="job-title">Recolección de Frutas Cítricas</div>
+                            <div class="job-salary">$40,000/día</div>
+                        </div>
+                        <div class="job-details">
+                            Huerto Principal - Recolección cuidadosa de naranjas y limones. Manejo delicado requerido.
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            1.8 km • 2 días de duración • Flexible
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Cítricos</span>
+                                <span class="job-tag">Cerca</span>
+                            </div>
+                            <button class="apply-btn" onclick="applyToJob(this)">
+                                <i class="fas fa-paper-plane"></i> Postularme
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="job-card" data-type="mantenimiento">
+                        <div class="job-header">
+                            <div class="job-title">Mantenimiento de Invernaderos</div>
+                            <div class="job-salary">$42,000/día</div>
+                        </div>
+                        <div class="job-details">
+                            Finca La Esperanza - Poda, limpieza y mantenimiento de sistemas de riego en invernaderos.
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            6.2 km • 1 día de duración • Hoy
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Invernadero</span>
+                                <span class="job-tag">Técnico</span>
+                            </div>
+                            <button class="apply-btn" onclick="applyToJob(this)">
+                                <i class="fas fa-paper-plane"></i> Postularme
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="job-card" data-type="cosecha">
+                        <div class="job-header">
+                            <div class="job-title">Cosecha de Aguacate Hass</div>
+                            <div class="job-salary">$55,000/día</div>
+                        </div>
+                        <div class="job-details">
+                            Finca Los Alpes - Cosecha especializada de aguacate Hass para exportación. Experiencia necesaria.
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            7.5 km • 4 días de duración • Próximamente
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Aguacate</span>
+                                <span class="job-tag">Exportación</span>
+                                <span class="job-tag">Premium</span>
+                            </div>
+                            <button class="apply-btn" onclick="applyToJob(this)">
+                                <i class="fas fa-paper-plane"></i> Postularme
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Jobs Section -->
+                <div class="my-jobs">
+                    <div class="section-title">
+                        <i class="fas fa-tasks"></i>
+                        Mis Trabajos
+                    </div>
+                    
+                    <div class="job-card current-job">
+                        <div class="job-header">
+                            <div class="job-title">Cosecha de Tomate Cherry - Confirmado</div>
+                            <div class="job-status status-confirmed">En Progreso</div>
+                        </div>
+                        <div class="job-details">
+                            Finca Los Rosales - Día 2 de 3 • Progreso: 75% completado
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-clock"></i>
+                            1 día restante • Finaliza mañana
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Activo</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="viewProgress()">
+                                <i class="fas fa-chart-line"></i> Ver Progreso
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div class="job-title">Siembra de Lechuga - Pendiente</div>
+                            <div class="job-status status-pending">Pendiente</div>
+                        </div>
+                        <div class="job-details">
+                            Esperando confirmación del agricultor • Postulado hace 2 días
+                        </div>
+                        <div class="job-location">
+                            <i class="fas fa-hourglass-half"></i>
+                            Respuesta esperada en 24 horas
+                        </div>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Postulado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <!-- Profile Section -->
+                <div class="profile-section">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-name">María González</div>
+                    
+                    <div class="rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span style="margin-left: 8px; color: #1e3a2e; font-weight: bold;">4.8</span>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">Trabajos</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="stat-value">156h</div>
+                            <div class="stat-label">Horas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Section -->
+                <div class="section-title">
+                    <i class="fas fa-map"></i>
+                    Trabajos Cercanos
+                </div>
+                <div class="map-container" onclick="openJobMap()">
+                    <div class="map-content">
+                        <div class="map-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <strong>Mapa de Oportunidades</strong><br>
+                        <small>📍 8 trabajos en 10km de radio</small><br>
+                        <small style="color: #4a7c59;">🗺️ Click para explorar</small>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="notifications">
+                    <div class="section-title">
+                        <i class="fas fa-bell"></i>
+                        Notificaciones
+                    </div>
+                    
+                    <div class="notification-item" onclick="handleNotification(this)">
+                        <div class="notification-title">🆕 Nuevo trabajo disponible</div>
+                        <div class="notification-text">Cosecha de aguacate a 3km de tu ubicación. Pago: $55,000/día</div>
+                    </div>
+
+                    <div class="notification-item" onclick="handleNotification(this)">
+                        <div class="notification-title">⏰ Recordatorio de trabajo</div>
+                        <div class="notification-text">Tu trabajo de mañana inicia a las 6:00 AM en Finca Los Rosales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let appliedJobs = [];
+        
+        // Función para aplicar a un trabajo
+        function applyToJob(button) {
+            const jobCard = button.closest('.job-card');
+            const jobTitle = jobCard.querySelector('.job-title').textContent;
+            
+            // Cambiar estado del botón
+            const originalHTML = button.innerHTML;
+            button.innerHTML = '<div class="loading"></div> Aplicando...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check"></i> Postulado ✓';
+                button.classList.add('success-check');
+                appliedJobs.push(jobTitle);
+                
+                // Actualizar contador de postulaciones
+                const postulacionesCounter = document.querySelector('.quick-stat-number');
+                postulacionesCounter.textContent = parseInt(postulacionesCounter.textContent) + 1;
+                
+                // Mostrar notificación
+                setTimeout(() => {
+                    alert(`¡Postulación enviada exitosamente!\n\nTrabajo: ${jobTitle}\n\nEl agricultor revisará tu perfil y te contactará pronto.`);
+                }, 500);
+                
+            }, 2000);
+        }
+
+        // Función para buscar trabajos
+        function searchJobs() {
+            const searchInput = document.querySelector('.search-bar');
+            searchInput.focus();
+            alert('Sistema de búsqueda avanzada:\n• Por ubicación\n• Por tipo de cultivo\n• Por rango de pago\n• Por disponibilidad');
+        }
+
+        // Función para filtrar por tipo
+        function filterByType(button, type) {
+            // Actualizar botones activos
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Filtrar trabajos
+            const jobCards = document.querySelectorAll('.job-card[data-type]');
+            jobCards.forEach(card => {
+                if (type === 'todos' || card.dataset.type === type) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Función para filtrar trabajos por búsqueda
+        function filterJobs(searchTerm) {
+            const jobCards = document.querySelectorAll('.job-card[data-type]');
+            const searchLower = searchTerm.toLowerCase();
+            
+            jobCards.forEach(card => {
+                const title = card.querySelector('.job-title').textContent.toLowerCase();
+                const details = card.querySelector('.job-details').textContent.toLowerCase();
+                const tags = Array.from(card.querySelectorAll('.job-tag'))
+                    .map(tag => tag.textContent.toLowerCase()).join(' ');
+                
+                if (title.includes(searchLower) || details.includes(searchLower) || tags.includes(searchLower)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Función para ver progreso del trabajo actual
+        function viewProgress() {
+            alert('📊 Progreso del Trabajo:\n\n• Día 2 de 3 completado\n• 75% de avance\n• 500kg recolectados de 650kg objetivo\n• Calificación actual: ⭐⭐⭐⭐⭐');
+        }
+
+        // Función para mostrar notificaciones
+        function showNotifications() {
+            alert('🔔 Centro de Notificaciones:\n\n• 1 nuevo trabajo disponible\n• 1 recordatorio de trabajo\n• 0 mensajes de agricultores');
+        }
+
+        // Función para mostrar menú de perfil
+        function showProfileMenu() {
+            const options = [
+                '👤 Mi Perfil',
+                '📊 Mis Estadísticas',
+                '💼 Historial de Trabajos',
+                '⚙️ Configuración',
+                '📞 Soporte',
+                '🚪 Cerrar Sesión'
+            ];
+            alert('Menú de perfil:\n' + options.join('\n'));
+        }
+
+        // Función para abrir mapa de trabajos
+        function openJobMap() {
+            alert('🗺️ Mapa Interactivo de Trabajos:\n\n• 8 trabajos disponibles en tu área\n• Filtros por distancia y pago\n• Navegación GPS integrada\n• Vista satelital de fincas');
+        }
+
+        // Función para manejar notificaciones
+        function handleNotification(element) {
+            element.style.opacity = '0.7';
+            element.style.transform = 'translateX(10px)';
+            
+            setTimeout(() => {
+                element.style.opacity = '1';
+                element.style.transform = 'translateX(0)';
+                
+                const title = element.querySelector('.notification-title').textContent;
+                if (title.includes('Nuevo trabajo')) {
+                    alert('🆕 ¡Nuevo trabajo encontrado!\n\nSe ha agregado un trabajo de cosecha de aguacate cerca de ti. ¿Deseas ver los detalles?');
+                } else {
+                    alert('📋 Recordatorio guardado\n\nTe enviaremos una notificación 1 hora antes del inicio del trabajo.');
+                }
+            }, 200);
+        }
+
+        // Animaciones de entrada al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar tarjetas de trabajo
+            const jobCards = document.querySelectorAll('.job-card');
+            jobCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+
+            // Animar estadísticas rápidas
+            const quickStats = document.querySelectorAll('.quick-stat');
+            quickStats.forEach((stat, index) => {
+                const number = stat.querySelector('.quick-stat-number');
+                const finalNumber = parseInt(number.textContent);
+                
+                // Contador animado
+                let currentNumber = 0;
+                const increment = finalNumber / 30;
+                const counter = setInterval(() => {
+                    currentNumber += increment;
+                    if (currentNumber >= finalNumber) {
+                        number.textContent = finalNumber;
+                        clearInterval(counter);
+                    } else {
+                        number.textContent = Math.floor(currentNumber);
+                    }
+                }, 50);
+            });
+
+            // Animar perfil
+            setTimeout(() => {
+                const profileAvatar = document.querySelector('.profile-avatar');
+                profileAvatar.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    profileAvatar.style.transform = 'scale(1)';
+                }, 200);
+            }, 800);
+        });
+
+        // Actualización en tiempo real de notificaciones
+        setInterval(() => {
+            const badge = document.querySelector('.notification-badge');
+            if (Math.random() > 0.98) { // 2% probabilidad cada segundo
+                const currentCount = parseInt(badge.textContent);
+                badge.textContent = currentCount + 1;
+                
+                // Efecto visual
+                badge.style.animation = 'none';
+                badge.offsetHeight; // Trigger reflow
+                badge.style.animation = 'pulse 2s infinite';
+            }
+        }, 1000);
+
+        // Función para actualizar trabajos disponibles (simulación)
+        setInterval(() => {
+            const trabajosCercaCount = document.querySelector('.quick-stat-number');
+            if (Math.random() > 0.95) { // 5% probabilidad
+                const current = parseInt(trabajosCercaCount.textContent);
+                const change = Math.random() > 0.5 ? 1 : -1;
+                const newCount = Math.max(0, current + change);
+                
+                // Animación del cambio
+                trabajosCercaCount.style.color = change > 0 ? '#4a7c59' : '#e74c3c';
+                trabajosCercaCount.textContent = newCount;
+                
+                setTimeout(() => {
+                    trabajosCercaCount.style.color = '#4a7c59';
+                }, 1000);
+            }
+        }, 5000);
+
+        // Efecto hover mejorado para las tarjetas de trabajo
+        document.querySelectorAll('.job-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+                this.style.boxShadow = '0 15px 35px rgba(74, 124, 89, 0.25)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Función para simular geolocalización
+        function updateLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        console.log('Ubicación actualizada:', position.coords.latitude, position.coords.longitude);
+                        // Aquí se actualizarían las distancias y trabajos cercanos
+                    },
+                    function(error) {
+                        console.log('Error de geolocalización:', error.message);
+                    }
+                );
+            }
+        }
+
+        // Actualizar ubicación cada 30 segundos
+        setInterval(updateLocation, 30000);
+
+        // Atajos de teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'f':
+                        e.preventDefault();
+                        document.querySelector('.search-bar').focus();
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        showNotifications();
+                        break;
+                    case 'm':
+                        e.preventDefault();
+                        openJobMap();
+                        break;
+                }
+            }
+        });
+
+        // Función para compartir trabajo
+        function shareJob(jobTitle) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Trabajo Agrícola Disponible',
+                    text: `Encontré este trabajo en AgroMatch: ${jobTitle}`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para navegadores que no soportan Web Share API
+                alert('🔗 Enlace copiado para compartir:\n\nTrabajo: ' + jobTitle);
+            }
+        }
+    </script>
+</body>
+</html>

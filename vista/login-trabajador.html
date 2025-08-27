@@ -1,0 +1,423 @@
+<!-- ================================================================
+    ARCHIVO HTML PARA LOGIN DE TRABAJADORES Y AGRICULTORES DE AGROMATCH
+   ================================================================
+    Este archivo contiene el formulario de inicio de sesión para 
+    trabajadores con opciones sociales y recuperación de contraseña.
+   ================================================================ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Configuración básica del documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - AgroMatch</title>
+    
+    <!-- Enlace a Font Awesome para iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Enlace al archivo CSS específico para login de trabajadores -->
+    <link rel="stylesheet" href="../assent/css/login-trabajador.css">
+</head>
+<body>
+    <!-- Contenedor principal con layout dividido -->
+    <div class="container">
+        
+        <!-- ========================================================
+             SECCIÓN IZQUIERDA - INFORMACIÓN Y BENEFICIOS
+        ======================================================== -->
+        <div class="left-section">
+            <div class="brand">
+                <!-- Logo y nombre de la marca -->
+                <div class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>AgroMatch</span>
+                </div>
+                
+                <!-- Mensaje de bienvenida para usuarios que regresan -->
+                <h1>¡Bienvenido de vuelta!</h1>
+                <p>Accede a tu cuenta y encuentra las mejores oportunidades laborales en el sector agrícola</p>
+                
+                <!-- Lista de beneficios disponibles para trabajadores -->
+                <div class="benefits">
+                    <div class="benefit-item">
+                        <i class="fas fa-search"></i>
+                        <span>Busca empleos cerca de ti</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-heart"></i>
+                        <span>Guarda tus ofertas favoritas</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Recibe alertas personalizadas</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Gestiona tu CV profesional</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================
+             SECCIÓN DERECHA - FORMULARIO DE LOGIN
+        ======================================================== -->
+        <div class="right-section">
+            <div class="form-container">
+                
+                <!-- Header del formulario de login -->
+                <div class="form-header">
+                    <h2>Iniciar Sesión</h2>
+                    <p>Ingresa tus credenciales para acceder a tu cuenta</p>
+                </div>
+
+                <!-- ====================================================
+                     FORMULARIO PRINCIPAL DE LOGIN - CONECTADO A PHP
+                ==================================================== -->
+                <form class="login-form" id="loginForm" action="../conexion/login.php" method="POST">
+                    
+                    <!-- Campo oculto para identificar el tipo de login -->
+                    <input type="hidden" name="tipo_login" value="trabajador">
+                    
+                    <!-- Campo: Email con ícono -->
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                        </div>
+                    </div>
+
+                    <!-- Campo: Contraseña con ícono y toggle de visibilidad -->
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" id="password" name="contrasena" placeholder="Contraseña" required>
+                            <!-- Botón para mostrar/ocultar contraseña -->
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+                        </div>
+                    </div>
+
+                    <!-- Opciones adicionales del formulario -->
+                    <div class="form-options">
+                        <!-- Checkbox para recordar sesión -->
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember" name="recordar_sesion">
+                            <label for="remember">Recordarme</label>
+                        </div>
+                        <!-- Enlace para recuperar contraseña -->
+                        <a href="#" class="forgot-password" onclick="openForgotModal()">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <!-- Botón principal de inicio de sesión -->
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </button>
+                    
+                    <!-- Botón de registro con paleta de colores verde -->
+                    <button type="button" class="btn-register" onclick="goToRegister()">
+                        <i class="fas fa-user-plus"></i>
+                        Crear Cuenta Nueva
+                    </button>
+                </form>
+
+                <!-- Área para mostrar mensajes -->
+                <div id="message-area" style="margin-top: 15px; text-align: center;"></div>
+
+                <!-- ====================================================
+                     DIVISOR VISUAL
+                ==================================================== -->
+                <div class="divider">
+                    <span>o</span>
+                </div>
+
+                <!-- ====================================================
+                     OPCIONES DE LOGIN SOCIAL
+                ==================================================== -->
+                <div class="social-login">
+                    <!-- Botón de login con Google -->
+                    <button class="btn-google" onclick="loginWithGoogle()">
+                        <i class="fab fa-google"></i>
+                        Continuar con Google
+                    </button>
+                    <!-- Botón de login con Facebook -->
+                    <button class="btn-facebook" onclick="loginWithFacebook()">
+                        <i class="fab fa-facebook"></i>
+                        Continuar con Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================
+         MODAL DE RECUPERACIÓN DE CONTRASEÑA
+    ================================================================ -->
+    <div id="forgotPasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <!-- Botón para cerrar el modal -->
+            <span class="close" onclick="closeForgotModal()">&times;</span>
+            
+            <!-- Header del modal -->
+            <div class="modal-header">
+                <h3>Recuperar Contraseña</h3>
+                <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña</p>
+            </div>
+            
+            <!-- Formulario de recuperación de contraseña -->
+            <form id="forgotPasswordForm" action="../conexion/recuperar-password.php" method="POST">
+                <div class="form-group">
+                    <div class="input-container">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <!-- Campo de email para recuperación -->
+                        <input type="email" id="forgotEmail" name="email_recuperacion" placeholder="Correo electrónico" required>
+                    </div>
+                </div>
+                <!-- Botón para enviar enlace de recuperación -->
+                <button type="submit" class="btn-send">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar enlace
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript personalizado embebido -->
+    <script>
+        // ================================================================
+        // FUNCIÓN PARA MOSTRAR/OCULTAR CONTRASEÑA
+        // ================================================================
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.querySelector('.toggle-password');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // ================================================================
+        // FUNCIÓN PARA NAVEGAR AL REGISTRO
+        // ================================================================
+        function goToRegister() {
+            window.location.href = 'seleccion-rol.html';
+        }
+
+        // ================================================================
+        // FUNCIONES PARA EL MODAL DE RECUPERACIÓN DE CONTRASEÑA
+        // ================================================================
+        function openForgotModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+        }
+
+        function closeForgotModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // ================================================================
+        // FUNCIONES PARA LOGIN SOCIAL (PLACEHOLDER)
+        // ================================================================
+        function loginWithGoogle() {
+            showMessage('Funcionalidad de Google próximamente disponible', 'info');
+        }
+
+        function loginWithFacebook() {
+            showMessage('Funcionalidad de Facebook próximamente disponible', 'info');
+        }
+
+        // ================================================================
+        // FUNCIÓN PARA MOSTRAR MENSAJES
+        // ================================================================
+        function showMessage(message, type) {
+            const messageArea = document.getElementById('message-area');
+            const messageDiv = document.createElement('div');
+            
+            messageDiv.style.padding = '10px';
+            messageDiv.style.borderRadius = '5px';
+            messageDiv.style.marginTop = '10px';
+            messageDiv.textContent = message;
+            
+            if (type === 'error') {
+                messageDiv.style.backgroundColor = '#fee';
+                messageDiv.style.color = '#c33';
+                messageDiv.style.border = '1px solid #fcc';
+            } else if (type === 'success') {
+                messageDiv.style.backgroundColor = '#efe';
+                messageDiv.style.color = '#363';
+                messageDiv.style.border = '1px solid #cfc';
+            } else {
+                messageDiv.style.backgroundColor = '#eef';
+                messageDiv.style.color = '#336';
+                messageDiv.style.border = '1px solid #ccf';
+            }
+            
+            messageArea.innerHTML = '';
+            messageArea.appendChild(messageDiv);
+            
+            // Remover mensaje después de 5 segundos
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // ================================================================
+        // VALIDACIÓN DEL FORMULARIO DE LOGIN
+        // ================================================================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Validaciones básicas
+            if (!email || !password) {
+                e.preventDefault();
+                showMessage('Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                showMessage('Por favor ingresa un email válido', 'error');
+                return;
+            }
+            
+            // Si llegamos aquí, el formulario es válido
+            showMessage('Iniciando sesión...', 'info');
+        });
+
+        // ================================================================
+        // MANEJO DE FORMULARIO DE RECUPERACIÓN DE CONTRASEÑA
+        // ================================================================
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('forgotEmail').value;
+            
+            if (!email) {
+                e.preventDefault();
+                showMessage('Por favor ingresa tu email', 'error');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                showMessage('Por favor ingresa un email válido', 'error');
+                return;
+            }
+            
+            showMessage('Enviando enlace de recuperación...', 'info');
+        });
+
+        // ================================================================
+        // MANEJAR MENSAJES DE PHP AL CARGAR LA PÁGINA
+        // ================================================================
+        window.addEventListener('load', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            const type = urlParams.get('type');
+            
+            if (message) {
+                showMessage(decodeURIComponent(message), type || 'info');
+                
+                // Limpiar la URL sin recargar la página
+                const cleanURL = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanURL);
+            }
+        });
+
+        // ================================================================
+        // ESTILOS ADICIONALES PARA EL MODAL
+        // ================================================================
+        const modalStyles = `
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                position: relative;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            
+            .modal-header h3 {
+                margin-top: 0;
+                color: #2d3748;
+                margin-bottom: 10px;
+            }
+            
+            .modal-header p {
+                color: #718096;
+                margin-bottom: 20px;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            
+            .close {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 24px;
+                font-weight: bold;
+                color: #999;
+                cursor: pointer;
+                line-height: 1;
+            }
+            
+            .close:hover {
+                color: #333;
+            }
+            
+            .btn-send {
+                width: 100%;
+                padding: 12px;
+                background: #48bb78;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-top: 15px;
+            }
+            
+            .btn-send:hover {
+                background: #38a169;
+            }
+        `;
+        
+        // Agregar estilos al documento
+        const styleElement = document.createElement('style');
+        styleElement.textContent = modalStyles;
+        document.head.appendChild(styleElement);
+    </script>
+</body>
+</html>
